@@ -1,4 +1,9 @@
 
+using CalculoImposto.Api.Application.Interfaces;
+using CalculoImposto.Api.Application.Services;
+using CalculoImposto.Api.Domain.Interfaces;
+using CalculoImposto.Api.Domain.Services;
+
 namespace CalculoImposto.Api
 {
     public class Program
@@ -8,6 +13,9 @@ namespace CalculoImposto.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<ICalculoImpostosApplicationService, CalculoImpostosApplicationService>();
+            builder.Services.AddScoped<ICalculoImpostoDomainService, CalculoImpostoDomainService>();
+
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

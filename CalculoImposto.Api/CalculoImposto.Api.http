@@ -1,6 +1,16 @@
-@CalculoImposto.Api_HostAddress = http://localhost:5150
+@CalculoImposto_Api_HostAddress = http://localhost:5150
 
-GET {{CalculoImposto.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### POST real para calcular impostos
+POST {{CalculoImposto_Api_HostAddress}}/api/v1/calculoimposto?icms=true&pis=true&cofins=true
+Content-Type: application/json
 
-###
+{
+  "id": 1,
+  "ufOrigem": "SP",
+  "ufDestino": "SP",
+  "data": "2025-06-22",
+  "produtos": [
+    { "id": 1, "nome": "Notebook", "valor": 4920.25 },
+    { "id": 2, "nome": "Mouse", "valor": 45.20 }
+  ]
+}
