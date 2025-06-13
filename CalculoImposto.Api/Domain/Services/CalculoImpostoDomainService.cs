@@ -1,9 +1,10 @@
 ﻿using CalculoImposto.Api.Domain.Entities;
+using CalculoImposto.Api.Domain.Interfaces;
 using System.Collections;
 
 namespace CalculoImposto.Api.Domain.Services
 {
-    public class CalculoImpostoDomainService
+    public class CalculoImpostoDomainService: ICalculoImpostoDomainService
     {
         public const decimal ICMS_MESMA_UF = 0.18m;
         public const decimal ICMS_DIF_UF = 0.12m;
