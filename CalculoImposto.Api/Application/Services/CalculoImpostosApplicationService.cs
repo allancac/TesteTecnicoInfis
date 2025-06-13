@@ -30,15 +30,13 @@ namespace CalculoImposto.Api.Application.Services
             }
 
             CalculoImpostosDto calculoImpostosDto = new CalculoImpostosDto();
+            calculoImpostosDto.PedidoId = pedidoEntity.PedidoId;
             calculoImpostosDto.ValorPedido = pedidoEntity.ValorTotal;
             calculoImpostosDto.ValorICMS = icms ? _calculoImpostoDomainService.CalcularICMS(pedidoEntity) : null;
             calculoImpostosDto.ValorPIS = pis ? _calculoImpostoDomainService.CalcularPIS(pedidoEntity) : null;
             calculoImpostosDto.ValorCOFINS = cofins ? _calculoImpostoDomainService.CalcularCOFINS(pedidoEntity) : null;
-            calculoImpostosDto.valorTotalImpostos = 
-                (calculoImpostosDto.ValorICMS ?? 0) 
-                + (calculoImpostosDto.ValorPIS ?? 0) 
-                + (calculoImpostosDto.ValorCOFINS ?? 0);
-            calculoImpostosDto.valorTotal = calculoImpostosDto.ValorPedido + calculoImpostosDto.valorTotalImpostos;
+            calculoImpostosDto.ValorTotalImpostos = (calculoImpostosDto.ValorICMS ?? 0) + (calculoImpostosDto.ValorPIS ?? 0) + (calculoImpostosDto.ValorCOFINS ?? 0);
+            calculoImpostosDto.ValorTotal = calculoImpostosDto.ValorPedido + calculoImpostosDto.ValorTotalImpostos;
 
             return calculoImpostosDto;
         }

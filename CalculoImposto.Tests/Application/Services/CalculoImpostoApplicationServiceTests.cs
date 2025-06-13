@@ -43,8 +43,8 @@ namespace CalculoImposto.Tests.Application.Services
             Assert.Equal(36, resultado.ValorICMS);
             Assert.Null( resultado.ValorPIS);
             Assert.Null( resultado.ValorCOFINS);
-            Assert.Equal(36, resultado.valorTotalImpostos);
-            Assert.Equal(336, resultado.valorTotal);
+            Assert.Equal(36, resultado.ValorTotalImpostos);
+            Assert.Equal(336, resultado.ValorTotal);
         }
 
         [Fact]
@@ -82,8 +82,8 @@ namespace CalculoImposto.Tests.Application.Services
             Assert.Null( resultado.ValorICMS);
             Assert.Equal(3.64188m, resultado.ValorPIS);
             Assert.Null( resultado.ValorCOFINS);
-            Assert.Equal(3.64188m, resultado.valorTotalImpostos);
-            Assert.Equal(224.36188m, resultado.valorTotal);
+            Assert.Equal(3.64188m, resultado.ValorTotalImpostos);
+            Assert.Equal(224.36188m, resultado.ValorTotal);
         }
 
         [Fact]
@@ -121,8 +121,8 @@ namespace CalculoImposto.Tests.Application.Services
             Assert.Null(resultado.ValorICMS);
             Assert.Null(resultado.ValorPIS);
             Assert.Equal(15, resultado.ValorCOFINS);
-            Assert.Equal(15, resultado.valorTotalImpostos);
-            Assert.Equal(315, resultado.valorTotal);
+            Assert.Equal(15, resultado.ValorTotalImpostos);
+            Assert.Equal(315, resultado.ValorTotal);
         }
 
         [Fact]
@@ -162,8 +162,8 @@ namespace CalculoImposto.Tests.Application.Services
             Assert.Equal(36, resultado.ValorICMS);
             Assert.Equal(5, resultado.ValorPIS);
             Assert.Equal(15, resultado.ValorCOFINS);
-            Assert.Equal(56, resultado.valorTotalImpostos);
-            Assert.Equal(356, resultado.valorTotal);
+            Assert.Equal(56, resultado.ValorTotalImpostos);
+            Assert.Equal(356, resultado.ValorTotal);
         }
     }
 }
