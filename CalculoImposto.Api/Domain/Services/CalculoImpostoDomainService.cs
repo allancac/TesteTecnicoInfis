@@ -1,7 +1,6 @@
 ﻿using CalculoImposto.Api.Domain.Entities;
 using CalculoImposto.Api.Domain.Exceptions;
 using CalculoImposto.Api.Domain.Interfaces;
-using System.Collections;
 
 namespace CalculoImposto.Api.Domain.Services
 {
