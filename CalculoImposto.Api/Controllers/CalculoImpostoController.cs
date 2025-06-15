@@ -1,11 +1,16 @@
 ﻿using CalculoImposto.Api.Application.DTOs;
 using CalculoImposto.Api.Application.Interfaces;
+using CalculoImposto.Api.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 namespace CalculoImposto.Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    /// <summary>
+    /// Controller responsável pelo cálculo de impostos para pedidos.
+    /// </summary>
     public class CalculoImpostoController : ControllerBase
     {
         private readonly ICalculoImpostosApplicationService _applicationService;
@@ -15,7 +20,15 @@ namespace CalculoImposto.Api.Controllers
             _applicationService = applicationService;
         }
 
-        // POST: api/v1/calculoimposto?icms=true&pis=true&cofins=true
+
+        /// <summary>
+        /// Calcula os impostos de um pedido.
+        /// </summary>
+        /// <param name="pedidoDto">Objeto  do pedido.</param>
+        /// <param name="icms">Se deseja calcular ICMS.</param>
+        /// <param name="pis">Se deseja calcular PIS.</param>
+        /// <param name="cofins">Se deseja calcular COFINS.</param>
+        /// <returns>Resumo do cálculo de impostos.</returns>
         [HttpPost]
         public IActionResult CalcularImpostos(
             [FromBody] PedidoRequestDto pedidoDto,
@@ -23,11 +36,23 @@ namespace CalculoImposto.Api.Controllers
             [FromQuery] bool pis,
             [FromQuery] bool cofins)
         {
-            if (pedidoDto == null)
-                return BadRequest("Pedido inválido.");
 
-            CalculoImpostosDto resultado = _applicationService.CalcularImpostos(pedidoDto, icms, pis, cofins);
-            return Ok(resultado);
+            // TODO: Implementar middelware para tratar os erros.
+            try
+            {
+                CalculoImpostosDto resultado = _applicationService.CalcularImpostos(pedidoDto, icms, pis, cofins);
+                return Ok(resultado);
+            }
+            catch (ApplicationServiceException applicationException)
+            {
+                return BadRequest(applicationException.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ocorreu um erro desconhecido.");
+            }
+
+
         }
 
     }
