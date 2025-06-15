@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using CalculoImposto.Api.Domain.Exceptions;
 
 namespace CalculoImposto.Api.Domain.Entities
 {
@@ -22,7 +23,14 @@ namespace CalculoImposto.Api.Domain.Entities
 
         public void AdicionarProduto(Produto prod)
         {
-            this.Produtos.Add(prod);
+            if (prod.Preco <= 0)
+            {
+                throw new DomainException("O preço do produto deve ser positivo.");
+            }
+            else
+            {
+                this.Produtos.Add(prod);
+            }
         }
 
         public override bool Equals(object? obj)
