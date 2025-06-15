@@ -1,7 +1,9 @@
 ﻿using CalculoImposto.Api.Application.DTOs;
-using CalculoImposto.Api.Domain.Entities;
 using CalculoImposto.Api.Application.Interfaces;
+using CalculoImposto.Api.Application.Exceptions;
+using CalculoImposto.Api.Domain.Entities;
 using CalculoImposto.Api.Domain.Interfaces;
+using CalculoImposto.Api.Domain.Exceptions;
 
 namespace CalculoImposto.Api.Application.Services
 {
@@ -15,30 +17,40 @@ namespace CalculoImposto.Api.Application.Services
         }
         public CalculoImpostosDto CalcularImpostos(PedidoRequestDto pedidoDto, bool icms, bool pis, bool cofins)
         {
-            
-
-            // TODO: Usar AutoMapper para mapear PedidoRequestDto para a entidade Pedido
-            Pedido pedidoEntity = new Pedido(pedidoDto.Id, pedidoDto.UfOrigem, pedidoDto.UfDestino, pedidoDto.Data);
-            foreach (var produtoDto in pedidoDto.Produtos)
+            if(!icms&&!pis&&!cofins)
             {
-                pedidoEntity.AdicionarProduto(new Produto(
-                        produtoDto.Id,
-                        produtoDto.Nome,
-                        produtoDto.Valor
-                    )
-                );
+                throw new ApplicationServiceException("Nenhum imposto selecionado para calculo.");
+
             }
+            try
+            {
+                // TODO: Usar AutoMapper para mapear PedidoRequestDto para a entidade Pedido
+                Pedido pedidoEntity = new Pedido(pedidoDto.Id, pedidoDto.UfOrigem, pedidoDto.UfDestino, pedidoDto.Data);
+                foreach (var produtoDto in pedidoDto.Produtos)
+                {
+                    pedidoEntity.AdicionarProduto(new Produto(
+                            produtoDto.Id,
+                            produtoDto.Nome,
+                            produtoDto.Valor
+                        )
+                    );
+                }
 
-            CalculoImpostosDto calculoImpostosDto = new CalculoImpostosDto();
-            calculoImpostosDto.PedidoId = pedidoEntity.PedidoId;
-            calculoImpostosDto.ValorPedido = pedidoEntity.ValorTotal;
-            calculoImpostosDto.ValorICMS = icms ? _calculoImpostoDomainService.CalcularICMS(pedidoEntity) : null;
-            calculoImpostosDto.ValorPIS = pis ? _calculoImpostoDomainService.CalcularPIS(pedidoEntity) : null;
-            calculoImpostosDto.ValorCOFINS = cofins ? _calculoImpostoDomainService.CalcularCOFINS(pedidoEntity) : null;
-            calculoImpostosDto.ValorTotalImpostos = (calculoImpostosDto.ValorICMS ?? 0) + (calculoImpostosDto.ValorPIS ?? 0) + (calculoImpostosDto.ValorCOFINS ?? 0);
-            calculoImpostosDto.ValorTotal = calculoImpostosDto.ValorPedido + calculoImpostosDto.ValorTotalImpostos;
+                CalculoImpostosDto calculoImpostosDto = new CalculoImpostosDto();
+                calculoImpostosDto.PedidoId = pedidoEntity.PedidoId;
+                calculoImpostosDto.ValorPedido = pedidoEntity.ValorTotal;
+                calculoImpostosDto.ValorICMS = icms ? _calculoImpostoDomainService.CalcularICMS(pedidoEntity) : null;
+                calculoImpostosDto.ValorPIS = pis ? _calculoImpostoDomainService.CalcularPIS(pedidoEntity) : null;
+                calculoImpostosDto.ValorCOFINS = cofins ? _calculoImpostoDomainService.CalcularCOFINS(pedidoEntity) : null;
+                calculoImpostosDto.ValorTotalImpostos = (calculoImpostosDto.ValorICMS ?? 0) + (calculoImpostosDto.ValorPIS ?? 0) + (calculoImpostosDto.ValorCOFINS ?? 0);
+                calculoImpostosDto.ValorTotal = calculoImpostosDto.ValorPedido + calculoImpostosDto.ValorTotalImpostos;
 
-            return calculoImpostosDto;
+                return calculoImpostosDto;
+            }
+            catch (DomainException domainException)
+            {
+                throw new ApplicationServiceException("Erro ao calcular impostos.", domainException);
+            }
         }
 
     }

@@ -1,8 +1,10 @@
 ﻿using CalculoImposto.Api.Application.DTOs;
 using CalculoImposto.Api.Application.Services;
+using CalculoImposto.Api.Application.Exceptions;
 using CalculoImposto.Api.Domain.Entities;
 using Moq;
 using CalculoImposto.Api.Domain.Interfaces;
+using CalculoImposto.Api.Domain.Exceptions;
 
 namespace CalculoImposto.Tests.Application.Services
 {
@@ -164,6 +166,62 @@ namespace CalculoImposto.Tests.Application.Services
             Assert.Equal(15, resultado.ValorCOFINS);
             Assert.Equal(56, resultado.ValorTotalImpostos);
             Assert.Equal(356, resultado.ValorTotal);
+        }
+
+        [Fact]
+        public void CalcularImpostos_NenhumImpostoSelecionado_DeveLancarExcecao()
+        {
+            // Arrange
+            var mockDomainService = new Mock<ICalculoImpostoDomainService>();
+            var service = new CalculoImpostosApplicationService(mockDomainService.Object);
+
+            var pedidoDto = new PedidoRequestDto
+            {
+                Id = 1,
+                UfOrigem = "SP",
+                UfDestino = "RJ",
+                Data = DateOnly.FromDateTime(DateTime.Today),
+                Produtos = new List<ProdutoDto>
+        {
+            new ProdutoDto { Id = 1, Nome = "Mouse", Valor = 100 },
+            new ProdutoDto { Id = 1, Nome = "Mouse", Valor = 100 },
+            new ProdutoDto { Id = 2, Nome = "Memoria RAM 8GB", Valor = 250 } 
+        }
+            };
+
+            // Act & Assert
+            var exception = Assert.Throws<ApplicationServiceException>(() =>
+                service.CalcularImpostos(pedidoDto, icms: false, pis: false, cofins: false));
+
+            Assert.Contains("Nenhum imposto selecionado para calculo.", exception.Message);
+        }
+
+        [Fact]
+        public void CalcularImpostos_ProdutoValorNaoPositivo_DeveLancarPilhaExcecoes()
+        {
+            // Arrange
+            var mockDomainService = new Mock<ICalculoImpostoDomainService>();
+            var service = new CalculoImpostosApplicationService(mockDomainService.Object);
+
+            var pedidoDto = new PedidoRequestDto
+            {
+                Id = 1,
+                UfOrigem = "SP",
+                UfDestino = "RJ",
+                Data = DateOnly.FromDateTime(DateTime.Today),
+                Produtos = new List<ProdutoDto>
+        {
+            new ProdutoDto { Id = 1, Nome = "Mouse", Valor = 0 },
+
+        }
+            };
+
+            // Act & Assert
+            var exception = Assert.Throws<ApplicationServiceException>(() =>
+                service.CalcularImpostos(pedidoDto, icms: true, pis: true, cofins: true));
+
+            Assert.Contains("Erro ao calcular impostos.", exception.Message);
+            Assert.IsType<DomainException>(exception.InnerException);
         }
     }
 }
