@@ -13,16 +13,12 @@ namespace CalculoImposto.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Adiciona serviços ao conteiner IoC. 
             builder.Services.AddScoped<ICalculoImpostosApplicationService, CalculoImpostosApplicationService>();
             builder.Services.AddScoped<ICalculoImpostoDomainService, CalculoImpostoDomainService>();
 
-
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            //builder.Services.AddOpenApi();
             builder.Services.AddEndpointsApiExplorer();
-            //builder.Services.AddSwaggerGen();
             builder.Services.AddSwaggerGen(c =>
             {
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -30,14 +26,25 @@ namespace CalculoImposto.Api
                 c.IncludeXmlComments(xmlPath);
             });
 
+
             var app = builder.Build();
+            app.UseSwaggerUI(c =>
+            {
+                c.DocumentTitle = "Documentação da API de Cálculo de Impostos";
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Cálculo de Impostos v1");
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 //app.MapOpenApi();
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.DocumentTitle = "Documentação da API de Cálculo de Impostos";
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Cálculo de Impostos v1");
+                    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
+                });
             }
 
             app.UseHttpsRedirection();
