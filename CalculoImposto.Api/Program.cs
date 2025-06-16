@@ -4,7 +4,6 @@ using CalculoImposto.Api.Application.Interfaces;
 using CalculoImposto.Api.Application.Services;
 using CalculoImposto.Api.Domain.Interfaces;
 using CalculoImposto.Api.Domain.Services;
-using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
 namespace CalculoImposto.Api
