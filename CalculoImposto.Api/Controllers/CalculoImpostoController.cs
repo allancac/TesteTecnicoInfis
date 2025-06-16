@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 namespace CalculoImposto.Api.Controllers
 {
-    [Route("api/v1/[controller]")]
-    [ApiController]
     /// <summary>
     /// Controller responsável pelo cálculo de impostos para pedidos.
     /// </summary>
+    [Route("api/v1/[controller]")]
+    [ApiController]
     public class CalculoImpostoController : ControllerBase
     {
         private readonly ICalculoImpostosApplicationService _applicationService;
@@ -24,11 +24,14 @@ namespace CalculoImposto.Api.Controllers
         /// <summary>
         /// Calcula os impostos de um pedido.
         /// </summary>
-        /// <param name="pedidoDto">Objeto  do pedido.</param>
-        /// <param name="icms">Se deseja calcular ICMS.</param>
-        /// <param name="pis">Se deseja calcular PIS.</param>
-        /// <param name="cofins">Se deseja calcular COFINS.</param>
-        /// <returns>Resumo do cálculo de impostos.</returns>
+        /// <param name="pedidoDto">Objeto que contém os dados do pedido.</param>
+        /// <param name="icms">Indica se o cálculo de ICMS deve ser realizado.</param>
+        /// <param name="pis">Indica se o cálculo de PIS deve ser realizado.</param>
+        /// <param name="cofins">Indica se o cálculo de COFINS deve ser realizado.</param>
+        /// <returns>Um objeto contendo o resumo do cálculo dos impostos.</returns>
+        /// <response code="200">Cálculo realizado com sucesso.</response>
+        /// <response code="400">Requisição inválida ou erro na regra de negócios.</response>
+        /// <response code="500">Erro interno inesperado.</response>
         [HttpPost]
         public IActionResult CalcularImpostos(
             [FromBody] PedidoRequestDto pedidoDto,
