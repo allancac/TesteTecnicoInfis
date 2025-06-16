@@ -78,6 +78,7 @@ Recebe um pedido contendo UF de origem, UF de destino, data e lista de produtos.
 
 ### Exemplo de chamada:
 
+**OBS: Alterar o número da porta**
 ```
 POST https://localhost:{porta}/api/v1/CalculoImposto?icms=true&pis=true&cofins=true
 ```
@@ -118,8 +119,11 @@ POST https://localhost:{porta}/api/v1/CalculoImposto?icms=true&pis=true&cofins=t
 
 ## 7. Documentação Swagger
 
-- **Swagger UI disponível em:**  
-  http://localhost:{{porta}}/swagger/index.html
+- **Swagger UI disponível em:**  http://localhost:{{porta}}/swagger/index.html
+
+**OBS: Alterar o número da porta**
+
+ 
 
 - Inclui:
   - Descrição de endpoints
@@ -129,62 +133,83 @@ POST https://localhost:{porta}/api/v1/CalculoImposto?icms=true&pis=true&cofins=t
 
 
 
-## 8. Testes Automatizados
+## 8. Testes Unitários Automatizados
 
 O projeto inclui testes unitários, organizados por camadas e namespaces, garantindo a cobertura das principais regras de negócio e orquestração.
 ## 8.1. Projeto de Testes: CalculoImposto.Tests
 ### 8.1.1. Application Services
 
-Classe: CalculoImpostosApplicationServiceTests
+#### Classe: CalculoImpostosApplicationServiceTests
 
-    Teste: CalcularImpostoCOFINS_DeveRetornarValoresCorretos
+- Teste: CalcularImpostoCOFINS_DeveRetornarValoresCorretos
 
-    Teste: CalcularImpostoICMS_DeveRetornarValoresCorretos
+- Teste: CalcularImpostoICMS_DeveRetornarValoresCorretos
 
-    Teste: CalcularImpostoPIS_DeveRetornarValoresCorretos
+- Teste: CalcularImpostoPIS_DeveRetornarValoresCorretos
 
-    Teste: CalcularImpostos_DeveRetornarValoresCorretos
+- Teste: CalcularImpostos_DeveRetornarValoresCorretos
 
-    Teste: CalcularImpostos_NenhumImpostoSelecionado_DeveLancarExcecao
+- Teste: CalcularImpostos_NenhumImpostoSelecionado_DeveLancarExcecao
 
-    Teste: CalcularImpostos_ProdutoValorNaoPositivo_DeveLancarPilhaExcecoes
+- Teste: CalcularImpostos_ProdutoValorNaoPositivo_DeveLancarPilhaExcecoes
 
 ### 8.1.2. Controllers
 
-Classe: CalculoImpostoControllerTests
+#### Classe: CalculoImpostoControllerTests
 
-    Teste: CalcularImpostos_DeveRetornarOk
+- Teste: CalcularImpostos_DeveRetornarOk
 
 ### 8.1.3. Domain Entities
 
-Classe: PedidoTests
+#### Classe: PedidoTests
 
-    Teste: AdicionarProduto_DeveLancarExcecaoParaPrecoNaoPositivo
+- Teste: AdicionarProduto_DeveLancarExcecaoParaPrecoNaoPositivo
 
-    Teste: ValorTotal_DeveRetornarSomaDosProdutos
+- Teste: ValorTotal_DeveRetornarSomaDosProdutos
 
-Classe: ProdutoTests
+#### Classe: ProdutoTests
 
-    Teste: PrecoNegativo_DeveLancarDomainException
+- Teste: PrecoNegativo_DeveLancarDomainException
 
-    Teste: ProdutosComMesmoId_DevemSerIguais
+- Teste: ProdutosComMesmoId_DevemSerIguais
 
-    Teste: ToString_DeveRetornarJson
+- Teste: ToString_DeveRetornarJson
 
 ### 8.1.4. Domain Services
 
-Classe: CalculoImpostoDomainServiceTests
+#### Classe: CalculoImpostoDomainServiceTests
 
-    Teste: CofinsTests
+- Teste: CofinsTests
 
-    Teste: IcmsDifUFTests
+- Teste: IcmsDifUFTests
 
-    Teste: IcmsMesmaUFTests
+- Teste: IcmsMesmaUFTests
 
-    Teste: PisTests
+- Teste: PisTests
 
 ## 9. Postman
-[Postman](https://app.getpostman.com/join-team?invite_code=686dd91f55c3b646f9bd938094321435334a1401722ec50bbdb3a2ede586e94c&target_code=2a6faf227df37fe0bbff3621a132d4fc)
+Link do [Postman](https://app.getpostman.com/join-team?invite_code=686dd91f55c3b646f9bd938094321435334a1401722ec50bbdb3a2ede586e94c&target_code=2a6faf227df37fe0bbff3621a132d4fc) para abrir a coleção com Requisições + Testes da API.
+
+**OBS.: Selecionar o Environment 'DEV' para configurar as variáveis de ambiente**
+
+
+### 9.1 Testes de Integração Semi-automatizados
+
+#### 9.1.1 - POST CalculoImposto - Casos de Sucesso
+- Verificar se o Status da resposta é 200 (sucesso)
+- Verificar se o Body tem os campos principais
+- Validar se algum campo numérico tem valor maior que zero
+
+### 9.2 Testes de Integração Automatizados para casos de erro
+
+#### 9.2.1 - POST CalculoImposto - Produto com valor negativo
+- Verificar Status Code é 400 para erro de valor negativo
+- Verificar se o Body contém mensagem de erro sobre valor negativo
+
+#### 9.2.2 - POST CalculoImposto - Nenhum imposto selecionado
+- Verificar Status Code é 400 quando nenhum imposto é selecionado
+- Verificar Body contém mensagem de erro sobre impostos não selecionados
+
 
 ## 10. Melhorias Futuras
 
