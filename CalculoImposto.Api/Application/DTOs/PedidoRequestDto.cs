@@ -30,12 +30,5 @@
         /// </summary>
         public List<ProdutoDto> Produtos { get; set; } = new();
 
-        /// <summary>
-        /// Valor total dos produtos do pedido (soma dos valores unitários dos produtos).
-        /// </summary>
-        public decimal ValorTotal
-        {
-            get { return Produtos.Sum(prod => prod.Valor); }
-        }
     }
 }
