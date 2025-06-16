@@ -1,8 +1,10 @@
 
+using CalculoImposto.Api.Application.DTOs;
 using CalculoImposto.Api.Application.Interfaces;
 using CalculoImposto.Api.Application.Services;
 using CalculoImposto.Api.Domain.Interfaces;
 using CalculoImposto.Api.Domain.Services;
+using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
 namespace CalculoImposto.Api
@@ -28,11 +30,6 @@ namespace CalculoImposto.Api
 
 
             var app = builder.Build();
-            app.UseSwaggerUI(c =>
-            {
-                c.DocumentTitle = "Documentação da API de Cálculo de Impostos";
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Cálculo de Impostos v1");
-            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
