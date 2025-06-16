@@ -3,6 +3,7 @@ using CalculoImposto.Api.Application.Interfaces;
 using CalculoImposto.Api.Application.Services;
 using CalculoImposto.Api.Domain.Interfaces;
 using CalculoImposto.Api.Domain.Services;
+using System.Reflection;
 
 namespace CalculoImposto.Api
 {
@@ -19,14 +20,24 @@ namespace CalculoImposto.Api
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            //builder.Services.AddOpenApi();
+            builder.Services.AddEndpointsApiExplorer();
+            //builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                //app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
