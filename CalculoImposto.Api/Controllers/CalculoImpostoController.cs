@@ -1,8 +1,10 @@
 ﻿using CalculoImposto.Api.Application.DTOs;
-using CalculoImposto.Api.Application.Interfaces;
 using CalculoImposto.Api.Application.Exceptions;
+using CalculoImposto.Api.Application.Interfaces;
+using CalculoImposto.Api.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
+using System;
 
 namespace CalculoImposto.Api.Controllers
 {
@@ -48,6 +50,11 @@ namespace CalculoImposto.Api.Controllers
             }
             catch (ApplicationServiceException applicationException)
             {
+                if (applicationException.InnerException is DomainException domainException)
+                {
+                    return BadRequest(domainException.Message);
+                }
+
                 return BadRequest(applicationException.Message);
             }
             catch (Exception)
